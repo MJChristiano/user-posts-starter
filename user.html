@@ -1,36 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Posts</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="index.css">
-</head>
-
-<body>
-  <div class="post__search">
-    <a href="/index.html">
-      <button>← Back</button>
-    </a>
-    <div class="post__search--container">
-      <label class="post__search--label">
-        Search by Id
-      </label>
-      <input type="text" placeholder="1">
-    </div>
-  </div>
-  <div class="post-list">
-    <div class="post">
-      <div class="post__title">
-        Post Title
+  <body>
+    <div class="post__search">
+      <a class="back-btn" href="./index.html">← Back</a>
+      <div class="post__search--container">
+        <label class="post__search--label" for="search-input">
+          Search by Id
+        </label>
+        <input
+          id="search-input"
+          type="number"
+          min="1"
+          max="10"
+          placeholder="1"
+          aria-describedby="search-input-message"
+          inputmode="numeric"
+        />
+        <p
+          id="search-input-message"
+          class="post__search--message"
+          aria-live="polite"
+        ></p>
       </div>
-      <p class="post__body">
-        Post Body
-      </p>
     </div>
-  </div>
-</body>
-<script src="user.js"></script>
+    <div
+      class="post-list"
+      id="post-list"
+      role="status"
+      aria-live="polite"
+      aria-busy="false"
+    ></div>
+  </body>
+  <script src="user.js"></script>
 </html>
