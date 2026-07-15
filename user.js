@@ -60,7 +60,7 @@ async function renderPosts(userId) {
     const postsData = await posts.json();
 
     if (!postsData.length) {
-      postListEl.innerHTML = emptyStateHTML("No posts found for this user.");
+      postListEl.innerHTML = emptyStateHTML("They never posted.");
       return;
     }
 
