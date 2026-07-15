@@ -18,17 +18,19 @@ function normalizeWebsite(website) {
 }
 
 function userHTML(user) {
+  const websiteHref = normalizeWebsite(user.website);
+
   return `
     <div class="user">
-      <button class="user-card" data-user-id="${user.id}" type="button" aria-label="Open posts by ${user.name}">
+      <div class="user-card" data-user-id="${user.id}" role="button" tabindex="0" aria-label="Open posts by ${user.name}">
         <div class="user-card__container">
           <h3>${user.name}</h3>
           <p><b>Email:</b> ${user.email}</p>
           <p><b>Phone:</b> ${user.phone}</p>
-          <p><b>Website:</b> ${user.website}</p>
+          <p><b>Website:</b> <a href="${websiteHref}" target="_blank" rel="noopener noreferrer">${user.website}</a></p>
           <p class="user-card__meta">View posts</p>
         </div>
-      </button>
+      </div>
     </div>
   `;
 }
@@ -120,10 +122,39 @@ if (userListEl) {
       return;
     }
 
+    if (target.closest("a")) {
+      return;
+    }
+
     const card = target.closest(".user-card");
     if (!card) {
       return;
     }
+
+    const userId = Number(card.getAttribute("data-user-id"));
+    if (!Number.isInteger(userId)) {
+      return;
+    }
+
+    openUserPosts(userId);
+  });
+
+  userListEl.addEventListener("keydown", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    const card = target.closest(".user-card");
+    if (!card) {
+      return;
+    }
+
+    event.preventDefault();
 
     const userId = Number(card.getAttribute("data-user-id"));
     if (!Number.isInteger(userId)) {
