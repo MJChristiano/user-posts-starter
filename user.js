@@ -7,11 +7,18 @@ const postListEl = hasDocument ? document.getElementById("post-list") : null;
 const searchInputEl = hasDocument
   ? document.getElementById("search-input")
   : null;
+const postFilterInputEl = hasDocument
+  ? document.getElementById("post-filter-input")
+  : null;
+const sortSelectEl = hasDocument ? document.getElementById("sort-select") : null;
+const postSummaryEl = hasDocument ? document.getElementById("post-summary") : null;
 const validationMessageEl = hasDocument
   ? document.getElementById("search-input-message")
   : null;
 
 const storedUserId = getStoredUserId();
+let activeUserId = storedUserId;
+let allPosts = [];
 let debounceTimer = null;
 
 function onSearchChange(event) {
@@ -30,6 +37,7 @@ function onSearchChange(event) {
 
   clearValidationMessage();
   localStorage.setItem("id", String(userId));
+  activeUserId = userId;
 
   if (debounceTimer) {
     clearTimeout(debounceTimer);
@@ -38,6 +46,14 @@ function onSearchChange(event) {
   debounceTimer = setTimeout(() => {
     renderPosts(userId);
   }, SEARCH_DEBOUNCE_MS);
+}
+
+function onPostFilterChange() {
+  applyPostControls();
+}
+
+function onSortChange() {
+  applyPostControls();
 }
 
 async function renderPosts(userId) {
@@ -58,20 +74,81 @@ async function renderPosts(userId) {
     }
 
     const postsData = await posts.json();
+    allPosts = postsData;
 
-    if (!postsData.length) {
+    if (!allPosts.length) {
       postListEl.innerHTML = emptyStateHTML("They never posted.");
+      updatePostSummary(0, 0, userId);
       return;
     }
 
-    postListEl.innerHTML = postsData.map((post) => postHTML(post)).join("");
+    applyPostControls();
   } catch {
+    allPosts = [];
     postListEl.innerHTML = emptyStateHTML(
       "Unable to load posts right now. Please try again.",
     );
+    updatePostSummary(0, 0, userId);
   } finally {
     postListEl.setAttribute("aria-busy", "false");
   }
+}
+
+function applyPostControls() {
+  if (!postListEl) {
+    return;
+  }
+
+  const query = postFilterInputEl
+    ? postFilterInputEl.value.trim().toLowerCase()
+    : "";
+
+  let filteredPosts = allPosts.filter((post) => {
+    if (!query) {
+      return true;
+    }
+
+    const titleMatch = post.title.toLowerCase().includes(query);
+    const bodyMatch = post.body.toLowerCase().includes(query);
+    return titleMatch || bodyMatch;
+  });
+
+  const sortMode = sortSelectEl ? sortSelectEl.value : "newest";
+  filteredPosts = sortPosts(filteredPosts, sortMode);
+
+  if (!filteredPosts.length) {
+    postListEl.innerHTML = emptyStateHTML("No posts match your filter.");
+    updatePostSummary(0, allPosts.length, activeUserId);
+    return;
+  }
+
+  postListEl.innerHTML = filteredPosts.map((post) => postHTML(post)).join("");
+  updatePostSummary(filteredPosts.length, allPosts.length, activeUserId);
+}
+
+function sortPosts(posts, mode) {
+  const sortedPosts = [...posts];
+
+  if (mode === "oldest") {
+    sortedPosts.sort((a, b) => a.id - b.id);
+    return sortedPosts;
+  }
+
+  if (mode === "title") {
+    sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
+    return sortedPosts;
+  }
+
+  sortedPosts.sort((a, b) => b.id - a.id);
+  return sortedPosts;
+}
+
+function updatePostSummary(shownCount, totalCount, userId) {
+  if (!postSummaryEl) {
+    return;
+  }
+
+  postSummaryEl.textContent = `Showing ${shownCount} of ${totalCount} posts for user #${userId}`;
 }
 
 function postHTML(post) {
@@ -136,6 +213,14 @@ function getStoredUserId() {
 if (searchInputEl) {
   searchInputEl.value = String(storedUserId);
   searchInputEl.addEventListener("input", onSearchChange);
+}
+
+if (postFilterInputEl) {
+  postFilterInputEl.addEventListener("input", onPostFilterChange);
+}
+
+if (sortSelectEl) {
+  sortSelectEl.addEventListener("change", onSortChange);
 }
 
 if (hasDocument) {
