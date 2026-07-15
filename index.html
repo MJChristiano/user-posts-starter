@@ -11,20 +11,31 @@
 
 <body>
   <div class="container">
-    <div class="row">
-      <div class="user-list">
-        <div class="user">
-          <div class="user-card">
-            <div class="user-card__container">
-              <h3>User's Name</h3>
-              <p><b>Email:</b>email@email.com</p>
-              <p><b>Phone:</b>000-000-0000</p>
-              <p><b>Website:</b> <a href="https://website.website" target="_blank">website.website</a></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <header class="page-header">
+      <p class="page-header__eyebrow">Directory</p>
+      <h1 class="page-header__title">Choose a User</h1>
+      <p class="page-header__subtitle">Search the team directory and open any profile to view their posts.</p>
+    </header>
+
+    <section class="toolbar" aria-label="User filters">
+      <label class="toolbar__label" for="user-search">Find by name or email</label>
+      <input
+        id="user-search"
+        class="toolbar__input"
+        type="search"
+        placeholder="Try Leanne or @biz"
+        autocomplete="off"
+      />
+      <p id="user-search-status" class="toolbar__status" aria-live="polite"></p>
+    </section>
+
+    <div
+      class="user-list"
+      id="user-list"
+      role="status"
+      aria-live="polite"
+      aria-busy="false"
+    ></div>
   </div>
 </body>
 <script src="index.js"></script>

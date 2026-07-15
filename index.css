@@ -16,6 +16,12 @@ body {
   line-height: 1.5;
 }
 
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
 .container {
   margin: 0 auto;
   padding: 16px 20px 32px;
@@ -35,6 +41,69 @@ p {
 
 .hidden {
   display: none;
+}
+
+.page-header {
+  padding-top: 28px;
+  max-width: 760px;
+}
+
+.page-header__eyebrow {
+  margin: 0;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6d6253;
+}
+
+.page-header__title {
+  margin-top: 10px;
+  font-size: clamp(1.8rem, 2.2vw + 1rem, 3rem);
+  line-height: 1.1;
+  color: #1d1a16;
+}
+
+.page-header__subtitle {
+  margin-top: 10px;
+  font-size: 15px;
+  color: #524b42;
+}
+
+.toolbar {
+  margin-top: 20px;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+}
+
+.toolbar__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #4b463d;
+}
+
+.toolbar__input {
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 12px;
+  padding: 11px 13px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.toolbar__input:focus-visible {
+  outline: 3px solid #2f6fed;
+  outline-offset: 2px;
+}
+
+.toolbar__status {
+  min-height: 20px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4f473b;
 }
 
 .user-list {
@@ -79,12 +148,35 @@ p {
   padding: 18px 18px 14px;
 }
 
+.user-card__meta {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6a5f4f;
+}
+
 .post-card {
   background-color: #fff;
   margin: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
   border-radius: 10px;
+}
+
+.user-list__status {
+  margin: 8px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  color: #3f3a33;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .post-card:hover {
@@ -215,6 +307,10 @@ p {
 @media (max-width: 700px) {
   .container {
     padding-inline: 14px;
+  }
+
+  .page-header {
+    padding-top: 16px;
   }
 
   .user {
